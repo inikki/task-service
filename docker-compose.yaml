@@ -1,0 +1,32 @@
+version: ‘3’
+services:
+  db:
+    image: mysql
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: restapi
+      MYSQL_USER: user
+      MYSQL_PASSWORD: demo
+    ports:
+      - '3306:3306'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    restart: always
+    ports:
+      - 8081:80
+#     volumes:
+#       - mysql_data:/var/lib/mysql # Persist data
+
+# volumes:
+#   mysql_data:
+#     driver: local  # Specify the volume driver (can also use named volumes)
+

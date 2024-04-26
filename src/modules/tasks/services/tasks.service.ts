@@ -1,38 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Task } from 'src/modules/tasks/entities/task.entity';
+import { Repository } from 'typeorm';
 import { CreateTaskDto } from '../dto/request/create-task-request.dto';
-import { TaskResponseDto } from '../dto/response/task-reponse.dto';
-import { randomUUID } from 'crypto';
-import { Task } from './types/interface';
-import { TaskStatus } from './types/enums';
-import { GetAllTaskResponseDto } from '../dto/response/get-all-tasks-response.dto';
 import { GetAllTaskRequestDto } from '../dto/request/get-all-tasks-request.dto';
+import { GetAllTaskResponseDto } from '../dto/response/get-all-tasks-response.dto';
+import { TaskResponseDto } from '../dto/response/task-reponse.dto';
+import { TaskStatus } from './types/enums';
 
 @Injectable()
 export class TaskService {
-  private tasks: Record<string, Task> = {};
+  constructor(
+    @InjectRepository(Task)
+    private taskRepository: Repository<Task>,
+  ) {}
 
   async create(createTask: CreateTaskDto): Promise<TaskResponseDto> {
-    const { title, description, status } = createTask;
-    const id = randomUUID();
-
-    const newTask: Task = {
-      id,
-      title,
-      description,
-      status,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    // Save the new task in memory
-    this.tasks[id] = newTask;
-
-    return newTask;
+    // Save the new task to db
+    return await this.taskRepository.save(createTask);
   }
 
   async getById(id: string): Promise<TaskResponseDto> {
     try {
-      const foundTask = this.tasks[id];
+      const foundTask = await this.taskRepository.findOneBy({ id });
+
       if (!foundTask) {
         throw new NotFoundException();
       }
@@ -48,27 +39,39 @@ export class TaskService {
   async getAll(
     getAllTaskRequest: GetAllTaskRequestDto,
   ): Promise<GetAllTaskResponseDto> {
-    return 'All tasks retrieved!';
+    const take = getAllTaskRequest.limit || 100;
+    const skip = getAllTaskRequest.offset || 0;
+
+    const [result, total] = await this.taskRepository.findAndCount({
+      take,
+      skip,
+    });
+    return {
+      data: result,
+      count: total,
+    };
   }
 
   async updateTaskStatus(
     id: string,
     newStatus: TaskStatus,
   ): Promise<TaskResponseDto> {
-    const task = this.tasks[id];
+    const task = await this.taskRepository.findOneBy({ id });
     if (!task) {
       throw new NotFoundException();
     }
-    task.status = newStatus;
-    task.updatedAt = new Date();
-    return task;
+    await this.taskRepository.update(id, {
+      status: newStatus,
+    });
+    const updatedTask = await this.taskRepository.findOneBy({ id });
+    return updatedTask;
   }
 
   async deleteById(id: string): Promise<void> {
-    const task = this.tasks[id];
+    const task = await this.taskRepository.findOneBy({ id });
     if (!task) {
       throw new NotFoundException();
     }
-    delete this.tasks[id];
+    await this.taskRepository.delete(id);
   }
 }

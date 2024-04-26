@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString } from 'class-validator';
 import { TaskStatus } from '../../services/types/enums';
 
@@ -11,14 +11,14 @@ export class TaskDto {
   title!: string;
 
   @IsString()
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Task description.',
     example: 'Lorem ipsum.',
   })
   description!: string;
 
   @IsEnum(TaskStatus)
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Task status.',
     example: TaskStatus.InProgress,
     enum: TaskStatus,
