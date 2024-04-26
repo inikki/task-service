@@ -105,7 +105,7 @@ export class TaskController {
   ): Promise<TaskResponseDto> {
     const { id } = params;
     const { status: newStatus } = updateTask;
-    return await this.taskService.updateTaskStatus(id, newStatus);
+    return await this.taskService.update(id, newStatus);
   }
 
   @Delete(':id')

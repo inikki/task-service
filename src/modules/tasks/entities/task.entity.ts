@@ -1,5 +1,5 @@
-import { TaskStatus } from 'src/modules/tasks/services/types/enums';
 import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import { TaskStatus } from '../services/types/enums';
 
 @Entity({
   name: 'tasks',

@@ -3,7 +3,7 @@ import { TaskController } from './tasks.controller';
 import { TaskService } from './services/tasks.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
-import { MysqlDatabaseProviderModule } from '../../providers/mysql/provider.module';
+import { MysqlDatabaseProviderModule } from '../providers/mysql/provider.module';
 
 @Module({
   imports: [MysqlDatabaseProviderModule, TypeOrmModule.forFeature([Task])],
