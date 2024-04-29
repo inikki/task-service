@@ -5,8 +5,8 @@ import { CreateTaskDto } from '../dto/request/create-task-request.dto';
 import { GetAllTaskRequestDto } from '../dto/request/get-all-tasks-request.dto';
 import { GetAllTaskResponseDto } from '../dto/response/get-all-tasks-response.dto';
 import { TaskResponseDto } from '../dto/response/task-reponse.dto';
-import { TaskStatus } from './types/enums';
 import { Task } from '../entities/task.entity';
+import { TaskStatus } from './types/enums';
 
 @Injectable()
 export class TaskService {
@@ -61,6 +61,9 @@ export class TaskService {
       status: newStatus,
     });
     const updatedTask = await this.taskRepository.findOneBy({ id });
+    if (!updatedTask) {
+      throw new NotFoundException();
+    }
     return updatedTask;
   }
 
