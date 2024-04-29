@@ -54,6 +54,7 @@ export class TaskController {
   @ApiOperation({
     operationId: 'getTask',
     description: 'Get task by id.',
+    summary: 'Get task by id',
   })
   @ApiOkResponse({
     description: 'Retrieved task.',
@@ -73,6 +74,7 @@ export class TaskController {
   @ApiOperation({
     operationId: 'getAllTasks',
     description: 'Get all tasks using pagination.',
+    summary: 'Get all tasks using pagination',
   })
   @ApiOkResponse({
     description: 'Retrieved list of all tasks.',
@@ -91,6 +93,7 @@ export class TaskController {
   @ApiOperation({
     operationId: 'updateTaskStatus',
     description: 'Update a state of a task.',
+    summary: 'Update a state of a task',
   })
   @ApiOkResponse({
     description: 'Retrieved task.',
@@ -112,6 +115,7 @@ export class TaskController {
   @ApiOperation({
     operationId: 'deleteTask',
     description: 'Delete task.',
+    summary: 'Delete task',
   })
   @ApiNoContentResponse({
     description: 'Successful operation',

@@ -10,6 +10,9 @@ services:
       MYSQL_PASSWORD: demo
     ports:
       - '3306:3306'
+    volumes:
+      - ./data:/var/lib/mysql  # Persist MySQL data
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: pma
@@ -23,10 +26,18 @@ services:
     restart: always
     ports:
       - 8081:80
-#     volumes:
-#       - mysql_data:/var/lib/mysql # Persist data
 
-# volumes:
-#   mysql_data:
-#     driver: local  # Specify the volume driver (can also use named volumes)
-
+  task-service:
+    build: .
+    container_name: task-service
+    ports:
+      - "3000:3000"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: restapi
+      MYSQL_USER: user
+      MYSQL_PASSWORD: demo
+      MYSQL_PORT: 3306
+    depends_on:
+      - db
