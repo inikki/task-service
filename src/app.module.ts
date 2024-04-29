@@ -6,8 +6,11 @@ import config from '../config/init-config';
 @Module({
   imports: [
     TaskModule,
-    // validate
-    ConfigModule.forRoot({ load: [config], isGlobal: true }),
+    ConfigModule.forRoot({
+      load: [config],
+      isGlobal: true,
+      // Todo validate
+    }),
   ],
 })
 export class AppModule {}

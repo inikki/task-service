@@ -42,9 +42,15 @@ export class TaskService {
     const take = getAllTaskRequest.limit || 100;
     const skip = getAllTaskRequest.offset || 0;
 
+    const sortBy = getAllTaskRequest.sortBy || 'createdAt';
+    const sortOrder = getAllTaskRequest.sortOrder || 'DESC';
+
     const [result, total] = await this.taskRepository.findAndCount({
       take,
       skip,
+      order: {
+        [sortBy]: sortOrder,
+      },
     });
     return {
       data: result,
