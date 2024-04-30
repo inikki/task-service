@@ -1,28 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication, Module, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from '../src/modules/tasks/entities/task.entity';
 import { TaskStatus } from '../src/modules/tasks/services/types/enums';
+import { MysqlDatabaseProviderModule } from '../src/modules/providers/mysql/provider.module';
+
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'sqlite', // in-memory SQLite for testing
+      database: ':memory:',
+      entities: [Task],
+      synchronize: true,
+      logging: false,
+    }),
+  ],
+})
+export class MysqlDatabaseProviderModuleMock {}
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  const dateTimeRegex =
+    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          type: 'sqlite', // in-memory SQLite for testing
-          database: ':memory:',
-          entities: [Task],
-          synchronize: true,
-          logging: false,
-        }),
-        TypeOrmModule.forFeature([Task]),
-        AppModule,
-      ],
-    }).compile();
+      imports: [AppModule],
+    })
+      .overrideModule(MysqlDatabaseProviderModule)
+      .useModule(MysqlDatabaseProviderModuleMock)
+      .compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(
@@ -57,12 +66,8 @@ describe('AppController (e2e)', () => {
       title: 'Some title',
       description: 'Some description',
       status: TaskStatus.Backlog,
-      createdAt: expect.stringMatching(
-        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/,
-      ),
-      updatedAt: expect.stringMatching(
-        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/,
-      ),
+      createdAt: expect.stringMatching(dateTimeRegex),
+      updatedAt: expect.stringMatching(dateTimeRegex),
     });
   });
 
@@ -84,12 +89,8 @@ describe('AppController (e2e)', () => {
       title: 'Some another title',
       description: 'Some another description',
       status: TaskStatus.Backlog,
-      createdAt: expect.stringMatching(
-        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/,
-      ),
-      updatedAt: expect.stringMatching(
-        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/,
-      ),
+      createdAt: expect.stringMatching(dateTimeRegex),
+      updatedAt: expect.stringMatching(dateTimeRegex),
     });
   });
 
@@ -112,12 +113,8 @@ describe('AppController (e2e)', () => {
       title: 'Some another title',
       description: 'Some another description',
       status: TaskStatus.InProgress,
-      createdAt: expect.stringMatching(
-        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/,
-      ),
-      updatedAt: expect.stringMatching(
-        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)((-(\d{2}):(\d{2})|Z)?)$/,
-      ),
+      createdAt: expect.stringMatching(dateTimeRegex),
+      updatedAt: expect.stringMatching(dateTimeRegex),
     });
   });
 
