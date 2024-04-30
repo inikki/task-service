@@ -195,6 +195,7 @@ describe('AppController (e2e)', () => {
     expect(response.body).toEqual({
       error: 'Bad Request',
       message: [
+        'description should not be empty',
         'description must be a string',
         'status must be one of the following values: completed, in progress, backlog',
       ],

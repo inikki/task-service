@@ -1,5 +1,7 @@
-export default () => ({
-  nodeEnv: process.env.NODE_ENV,
+import { Config, Environment } from './interface';
+
+export default (): Config => ({
+  nodeEnv: process.env.NODE_ENV as Environment,
   db: {
     mysql: {
       rootPassword: process.env.MYSQL_ROOT_PASSWORD,

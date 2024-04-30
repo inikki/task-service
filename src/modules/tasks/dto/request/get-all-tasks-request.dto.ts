@@ -25,7 +25,7 @@ export class GetAllTaskRequestDto {
   @IsOptional()
   @IsEnum(SortBy)
   @ApiProperty({
-    description: 'The field by which to sort the tasks.',
+    description: 'The field by which to sort the tasks. Defaults to createdAt.',
     example: 'createdAt',
     enum: SortBy,
   })
@@ -35,7 +35,7 @@ export class GetAllTaskRequestDto {
   @Transform(({ value }) => value.toLowerCase())
   @IsEnum(SortOrder)
   @ApiProperty({
-    description: 'The order in which to sort the tasks.',
+    description: 'The order in which to sort the tasks. Defaults to desc.',
     example: 'asc',
     enum: SortOrder,
   })

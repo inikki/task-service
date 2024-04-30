@@ -21,13 +21,13 @@ The structure of the application is a composition of NestJS elements.
 
 ## Configuration
 
-## Installation
+## Running the app locally
+
+### Installation
 
 ```bash
 $ npm install
 ```
-
-## Running the app locally
 
 Create `.env` file from `./local/.env.example` and move it to the root.
 This file contains example environment variables for your application.

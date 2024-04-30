@@ -9,7 +9,6 @@ import config from '../config/init-config';
     ConfigModule.forRoot({
       load: [config],
       isGlobal: true,
-      // Todo validate
     }),
   ],
 })

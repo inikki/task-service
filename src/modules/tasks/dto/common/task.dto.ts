@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { TaskStatus } from '../../services/types/enums';
 
 export class TaskDto {
   @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     description: 'ID of the task.',
     example: 'Lorem ipsum',
@@ -11,6 +12,7 @@ export class TaskDto {
   title!: string;
 
   @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     description: 'Task description.',
     example: 'Lorem ipsum.',
