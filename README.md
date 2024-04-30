@@ -2,12 +2,24 @@
 
 ## Description
 
-Simple RESTful API built with Node.js that allows users to create and manage tasks.
+Simple RESTful API built with Nest.js that allows users to create and manage tasks. The API supports pagination, sorting, and filtering of tasks.
 
-## Prerequisites
+## Application structure
 
-1. Docker
-2. Node.js 🚀
+The structure of the application is a composition of NestJS elements.
+
+```txt
+├── config                          Application configuration.
+├── local                           Contains files used for local development.
+├── src                             All source codes.
+│   ├── modules                     Application NestJS modules.
+│   ├── app.module.ts               Main NestJS module.
+│   └── main.ts                     Application entry point for bootstrapping. Bootstrap documentation,
+│                                   pipes, configuration and server.
+└── test                            E2E tests.
+```
+
+## Configuration
 
 ## Installation
 
@@ -15,7 +27,22 @@ Simple RESTful API built with Node.js that allows users to create and manage tas
 $ npm install
 ```
 
-## Running the app
+## Running the app locally
+
+Create `.env` file from `./local/.env.example` and move it to the root.
+This file contains example environment variables for your application.
+
+```bash
+cp ./local/.env.example .env
+```
+
+### Run MySQL database:
+
+```bash
+npm run init-local-db
+```
+
+### Start the application:
 
 ```bash
 # development
@@ -28,29 +55,31 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Running the app locally with Docker
+
+```bash
+docker-compose up
+```
+
+The application is running on `http://localhost:3000`.
+
+# Swagger
+
+The application's Swagger API documentation is available at `http://localhost:3000/docs#/`.
+By reviewing the Swagger documentation, you can get a clear understanding of the available API endpoints, their request and response formats, and how to interact with the API.
+
+## Running end-to-end tests:
+
+```bash
+$ npm run test:e2e
+```
+
+## Unit tests
 
 ```bash
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
