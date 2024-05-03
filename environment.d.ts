@@ -9,6 +9,9 @@ declare global {
       MYSQL_PASSWORD: string;
       MYSQL_HOST: string;
       MYSQL_PORT: string;
+
+      AUTH0_AUDIENCE: string;
+      AUTH0_DOMAIN: string;
     }
   }
 }

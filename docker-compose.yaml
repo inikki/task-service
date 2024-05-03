@@ -25,7 +25,7 @@ services:
       PMA_PASSWORD: root
     restart: always
     ports:
-      - 8081:80
+      - 8082:80
 
   task-service:
     build: .
@@ -39,5 +39,8 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: demo
       MYSQL_PORT: 3306
+      AUTH0_AUDIENCE: task-service
+      AUTH0_DOMAIN: https://dev-u34uch0wzt1tbai3.us.auth0.com/
+
     depends_on:
       - db

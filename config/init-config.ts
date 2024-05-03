@@ -12,4 +12,8 @@ export default (): Config => ({
       port: parseInt(process.env.MYSQL_PORT),
     },
   },
+  auth0: {
+    audience: process.env.AUTH0_AUDIENCE,
+    domain: process.env.AUTH0_DOMAIN,
+  },
 });

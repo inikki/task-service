@@ -8,6 +8,7 @@ import {
   Post,
   HttpCode,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './services/tasks.service';
 import {
@@ -26,6 +27,8 @@ import { GetTaskRequestDto } from './dto/request/get-task-request.dto';
 import { UpdateTaskDto } from './dto/request/update.task.dto';
 import { GetAllTaskResponseDto } from './dto/response/get-all-tasks-response.dto';
 import { GetAllTaskRequestDto } from './dto/request/get-all-tasks-request.dto';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { Scopes } from './helpers/scope.helper';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -33,6 +36,8 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
+  @Scopes(['create:task'])
   @ApiOperation({
     operationId: 'createTask',
     description: 'Create new Task.',
@@ -51,6 +56,8 @@ export class TaskController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
+  @Scopes(['read:tasks'])
   @ApiOperation({
     operationId: 'getTask',
     description: 'Get task by id.',
@@ -71,6 +78,8 @@ export class TaskController {
   }
 
   @Get('/')
+  @Scopes(['read:tasks'])
+  @UseGuards(AuthGuard)
   @ApiOperation({
     operationId: 'getAllTasks',
     description: 'Get all tasks using pagination.',
@@ -90,6 +99,8 @@ export class TaskController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
+  @Scopes(['update:task'])
   @ApiOperation({
     operationId: 'updateTaskStatus',
     description: 'Update a state of a task.',
@@ -112,6 +123,8 @@ export class TaskController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
+  @Scopes(['delete:task'])
   @ApiOperation({
     operationId: 'deleteTask',
     description: 'Delete task.',

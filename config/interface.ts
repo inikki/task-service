@@ -15,4 +15,8 @@ export interface Config {
       port: number;
     };
   };
+  auth0: {
+    audience: string;
+    domain: string;
+  };
 }
