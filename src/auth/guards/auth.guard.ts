@@ -13,6 +13,8 @@ import { InvalidTokenError } from 'express-oauth2-jwt-bearer';
 import { GetVerificationKey, expressJwtSecret } from 'jwks-rsa';
 import { Scopes } from 'src/modules/tasks/helpers/scope.helper';
 import { promisify } from 'util';
+import { Auth0JwtPayload } from './types/interface';
+import { UserService } from 'src/modules/users/services/users.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -21,6 +23,8 @@ export class AuthGuard implements CanActivate {
 
   constructor(
     private readonly config: ConfigService<Config, true>,
+    private readonly userService: UserService,
+
     private reflector: Reflector,
   ) {
     this.domain = this.config.get('auth0.domain', { infer: true });
@@ -47,17 +51,29 @@ export class AuthGuard implements CanActivate {
     try {
       await jwtCheck(request, response);
 
-      const claims = request.auth.scope;
+      const claims: Auth0JwtPayload = request.auth;
+      const { scope, sub: userId } = claims;
+
+      if (userId) {
+        // save user id to db
+        await this.userService.create(userId);
+      }
+
+      if (!scope) {
+        throw new ForbiddenException('No scopes defined');
+      }
 
       // Get required scopes for endpoint
       const requiredScopes = this.reflector.get(Scopes, context.getHandler());
 
       // Get token scope
-      const tokenScopes = claims.split(' ');
+      const tokenScopes = scope.split(' ');
 
-      if (
-        !requiredScopes.every((scope: string) => tokenScopes.includes(scope))
-      ) {
+      const hasRequiredScopes = requiredScopes.every((scope: string) =>
+        tokenScopes.includes(scope),
+      );
+
+      if (!hasRequiredScopes) {
         throw new ForbiddenException('Insufficient permissions');
       }
 

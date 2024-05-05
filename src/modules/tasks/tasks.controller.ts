@@ -27,8 +27,10 @@ import { GetTaskRequestDto } from './dto/request/get-task-request.dto';
 import { UpdateTaskDto } from './dto/request/update.task.dto';
 import { GetAllTaskResponseDto } from './dto/response/get-all-tasks-response.dto';
 import { GetAllTaskRequestDto } from './dto/request/get-all-tasks-request.dto';
-import { AuthGuard } from 'src/guards/auth.guard';
 import { Scopes } from './helpers/scope.helper';
+import { GetUserId } from 'src/auth/decorators/user.decorator';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { plainToClass } from 'class-transformer';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -50,9 +52,10 @@ export class TaskController {
   @ApiBadRequestResponse()
   @ApiInternalServerErrorResponse()
   async createNewTask(
+    @GetUserId() userId: string,
     @Body() createTask: CreateTaskDto,
   ): Promise<TaskResponseDto> {
-    return await this.taskService.create(createTask);
+    return await this.taskService.create(createTask, userId);
   }
 
   @Get(':id')

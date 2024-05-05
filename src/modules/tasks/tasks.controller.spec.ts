@@ -52,7 +52,10 @@ describe('TaskController', () => {
 
     spyCreate.mockResolvedValue(expectedTaskResponse);
 
-    const result = await taskController.createNewTask(createTaskDto);
+    const result = await taskController.createNewTask(
+      'some-user-id',
+      createTaskDto,
+    );
 
     expect(spyCreate).toHaveBeenCalledTimes(1);
     expect(spyCreate).toHaveBeenCalledWith(createTaskDto);

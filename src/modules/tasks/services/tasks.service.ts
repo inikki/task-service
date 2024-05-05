@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToClass, plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { CreateTaskDto } from '../dto/request/create-task-request.dto';
 import { GetAllTaskRequestDto } from '../dto/request/get-all-tasks-request.dto';
@@ -15,9 +16,21 @@ export class TaskService {
     private taskRepository: Repository<Task>,
   ) {}
 
-  async create(createTask: CreateTaskDto): Promise<TaskResponseDto> {
+  async create(
+    createTask: CreateTaskDto,
+    userId: string,
+  ): Promise<TaskResponseDto> {
     // Save the new task to db
-    return await this.taskRepository.save(createTask);
+    const newTask = await this.taskRepository.save({
+      ...createTask,
+      owner: {
+        userId,
+      },
+    });
+    const transformedTask = plainToClass(TaskResponseDto, newTask, {
+      excludeExtraneousValues: true,
+    });
+    return transformedTask;
   }
 
   async getById(id: string): Promise<TaskResponseDto> {

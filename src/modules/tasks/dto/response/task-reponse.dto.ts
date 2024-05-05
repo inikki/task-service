@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
 import { IsDate, IsString } from 'class-validator';
 import { TaskDto } from '../common/task.dto';
-import { Type } from 'class-transformer';
 
 export class TaskResponseDto extends TaskDto {
   @IsString()
+  @Expose()
   @ApiProperty({
     description: 'ID of the task.',
     example: 'd78e4fd9-3a7d-4e33-a101-24e3c1df713d',
@@ -12,6 +13,7 @@ export class TaskResponseDto extends TaskDto {
   id!: string;
 
   @IsDate()
+  @Expose()
   @Type(() => Date)
   @ApiProperty({
     description: 'Task creation timestamp.',
@@ -21,6 +23,7 @@ export class TaskResponseDto extends TaskDto {
   createdAt!: Date;
 
   @IsDate()
+  @Expose()
   @Type(() => Date)
   @ApiProperty({
     description: 'Task update timestamp.',

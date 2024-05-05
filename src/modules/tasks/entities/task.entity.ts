@@ -1,4 +1,12 @@
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { User } from 'src/modules/users/entities/user.entity';
+import {
+  Column,
+  Entity,
+  Generated,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { TaskStatus } from '../services/types/enums';
 
 @Entity({
@@ -40,4 +48,8 @@ export class Task {
     type: 'datetime',
   })
   updatedAt!: Date;
+
+  @Exclude({ toPlainOnly: true })
+  @ManyToOne(() => User)
+  owner?: User;
 }
